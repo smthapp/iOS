@@ -90,6 +90,10 @@
     click_userinfo = click;
     parent = _parent;
     
+    CALayer * l = [self layer];
+    [l setMasksToBounds:YES];
+    [l setCornerRadius:4];
+    
     NSRange t_range = [_userid rangeOfString:@"."];
     if(t_range.location != NSNotFound){
         userid = [_userid substringToIndex:t_range.location];

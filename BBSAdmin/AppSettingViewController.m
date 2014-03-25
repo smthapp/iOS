@@ -69,7 +69,7 @@
     }
     else if(section == 1)
     {
-        return 6;
+        return 7;
     }
     else
     {
@@ -202,6 +202,15 @@
                 }
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 break;
+            case 6:
+                cell.textLabel.text = @"主题显示次序";
+                if(appSetting->order_threadid == 0){
+                    cell.detailTextLabel.text = @"最新回复";
+                }else{
+                    cell.detailTextLabel.text = @"最新原文";
+                }
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                break;
             default:
                 break;
         }
@@ -314,6 +323,17 @@
                 }
                 NSString * str = [NSString stringWithFormat:@"%d", appSetting->article_sort];
                 [appSetting appSettingChange:@"article_sort" :str];
+                [m_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
+            case 6:
+            {
+                appSetting->order_threadid ++;
+                if(appSetting->order_threadid > 1){
+                    appSetting->order_threadid = 0;
+                }
+                NSString * str = [NSString stringWithFormat:@"%d", appSetting->order_threadid];
+                [appSetting appSettingChange:@"order_threadid" :str];
                 [m_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
                 break;
             }

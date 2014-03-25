@@ -29,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *text_addmoney;
 - (IBAction)pressBtnAdd:(id)sender;
 @property (strong, nonatomic) IBOutlet UIButton *button_add;
+- (IBAction)beginEdit:(id)sender;
 
 -(void)setContentInfo:(NSString*)name :(int)_mode :(float)_odds :(int)voted :(int)_sel :(int)status :(UIViewController *)_parent;
 

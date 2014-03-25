@@ -12,22 +12,28 @@
 #import <QuartzCore/QuartzCore.h>
 #import "TimelineListCell.h"
 #import "AppViewController.h"
+#import "NavigationMenuView/SINavigationMenuView.h"
 
-
-@interface TimelineListViewController : AppViewController<UITableViewDataSource, UITableViewDelegate>
+@interface TimelineListViewController : AppViewController<UITableViewDataSource, UITableViewDelegate, SINavigationMenuDelegate>
 {
-    long from;
-    long size;
-    long load_size;
-    
     NSTimeInterval cur_time;
     long long int last_read_time;
+    
+    SINavigationMenuView * menu;
+    NSArray * menu_items;
+    
+    bool waiting_for_mbselect;
+
+    long topid;
+    long bottomid;
+    bool loadold;
 }
 
 @property (strong, nonatomic) NSMutableArray *m_mtarrayInfo;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchbar;
 
+@property (strong, nonatomic) IBOutlet UINavigationItem *navi;
 
-@property (strong, nonatomic) IBOutlet UINavigationBar *navi;
 - (IBAction)pressBtnNew:(id)sender;
 @property (strong, nonatomic) IBOutlet UITableView *m_tableView;
 

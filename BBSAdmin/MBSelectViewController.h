@@ -12,12 +12,21 @@
 #import "InfoCenter.h"
 #import "AppViewController.h"
 
-@interface MBSelectViewController : AppViewController<UITableViewDataSource,UITableViewDelegate>
+@interface MBSelectViewController : AppViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate>
 {
     NSMutableArray * mblist;
+    
+    bool in_search;
+    UITapGestureRecognizer * tap;
+    
+    bool waiting_for_mbselect;
+    
+    NSMutableArray * bhis;
 }
 
 - (IBAction)pressBtnBack:(id)sender;
 @property (strong, nonatomic) IBOutlet UITableView *m_tableView;
+- (IBAction)pressBtnSearch:(id)sender;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchbar;
 
 @end

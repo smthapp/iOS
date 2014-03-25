@@ -10,6 +10,7 @@
 
 @interface SectionListCell : UITableViewCell
 @property (strong, nonatomic) IBOutlet UILabel *label_name;
+@property (strong, nonatomic) IBOutlet UIImageView *img_icon;
 
--(void)setContentInfo:(NSString*)name;
+-(void)setContentInfo:(NSString*)name :(NSString *)icon;
 @end

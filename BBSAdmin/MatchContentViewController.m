@@ -23,6 +23,7 @@
     [super viewDidLoad];
     
     addvotemode = 0;
+    
     [self loadContent];
 }
 
@@ -33,6 +34,9 @@
     addvotemode = 1;
     
     [self loadContent];
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 -(void)parseContent
@@ -101,13 +105,17 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1 + selnum;
+    return 2 + selnum;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.row == 0){
         return 80.0f;
+    }
+    
+    if(indexPath.row == (selnum + 1)){
+        return 640.f; //padding for scroll
     }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
@@ -149,7 +157,7 @@
         
         return cell;
 
-    }else if(indexPath.row < 1 + [options count]){
+    }else if(indexPath.row < 1 + selnum){
         //options
         static NSString *root_cellId;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
@@ -169,9 +177,22 @@
         [cell setContentInfo:[NSString stringWithFormat:@"选项%d: %@", (int)indexPath.row, [dict_opt objectForKey:@"name"]] :matchmode :[[dict_opt objectForKey:@"odds"] floatValue] :my_voted_money[indexPath.row - 1] :(int)indexPath.row :status :self];
         return cell;
     }else{
-        return nil;
+        NSString *cellId = @"MatchContentPadding123";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellId];
+        }
+        [cell setBackgroundColor:[UIColor clearColor]];
+        
+        return cell;
     }
     
+}
+
+-(void)scroll_to_sel:(int)index
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 -(void)showReg:(int)_guessid
@@ -226,4 +247,5 @@
     guessid = guess_id;
     matchid = match_id;
 }
+
 @end

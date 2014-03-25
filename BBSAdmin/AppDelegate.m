@@ -22,9 +22,8 @@
 #ifdef DEBUG
     NSLog(@"didReceiveRemote");
 #endif
-    tabbar_message_set_notify(1);
-    tabbar_message_check_notify();
-
+    appSetting->unread_apns_cnt = 1;
+    message_unread_check(false);
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -92,8 +91,8 @@
     NSLog(@"didBecomeActive");
 #endif
     if(application.applicationIconBadgeNumber != 0){
-        tabbar_message_set_notify(1);
-        tabbar_message_check_notify();
+        appSetting->unread_apns_cnt = 1;
+        message_unread_check(false);
         
         application.applicationIconBadgeNumber = 0;
     }

@@ -15,23 +15,12 @@
 
 @interface MessagesViewController : AppViewController<UITableViewDataSource, UITableViewDelegate>
 {
-    //reply
-    int reply_count;
-    int reply_unread;
-    
-    //@
-    int at_count;
-    int at_unread;
-    
-    //mail
-    int mail_count;
-    int mail_unread;
-    int mail_isfull;
-    
-    //mailsend
-    int mail_count_send;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView *m_tableView;
+@property (strong, nonatomic) IBOutlet UINavigationItem *navi;
+
+-(void)refresh;
 
 @end
+

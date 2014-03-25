@@ -27,16 +27,14 @@
     // Configure the view for the selected state
 }
 
--(void)setContentInfo:(NSString*)name :(int)total :(int)unread :(UIImage *)image
+-(void)setContentInfo:(NSString*)name :(int)unread :(UIImage *)image
 {
     [label_name setText:name];
 
-    if(total < 0){
-        [label_count setHidden:YES];
-    }else if(unread == 0){
-        [label_count setText:[NSString stringWithFormat:@"共%d条",total]];
+    if(unread == 0){
+        [label_count setText:@""];
     }else{
-        [label_count setText:[NSString stringWithFormat:@"共%d条,%d条未读",total,unread]];
+        [label_count setText:[NSString stringWithFormat:@"%d条未读",unread]];
         label_count.textColor = [UIColor redColor];
     }
 

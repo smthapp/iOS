@@ -28,6 +28,11 @@
     // Configure the view for the selected state
 }
 
+- (IBAction)beginEdit:(id)sender {
+    [(MatchContentViewController *)parent scroll_to_sel:sel];
+
+}
+
 -(void)setContentInfo:(NSString*)name :(int)_mode :(float)_odds :(int)voted :(int)_sel :(int)status :(UIViewController *)_parent
 {
     [label_name setText:name];

@@ -41,5 +41,6 @@
 //public API
 -(void)setContentInfo:(int)guess_id :(int)match_id;
 -(void)VoteMatch:(int)sel :(int)addmoney;
+-(void)scroll_to_sel:(int)index;
 
 @end

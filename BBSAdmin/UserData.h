@@ -22,6 +22,10 @@ int apiSetUserData_del_friend(NSString * userid);
 NSMutableDictionary * apiGetUserData_friends();
 int apiGetUserData_is_friends(NSString * userid);
 
+//board history
+int apiSetUserData_add_bhis(NSDictionary * brd);
+NSMutableArray * apiGetUserData_bhis();
+
 //config
 int apiSetUserData_config(NSString * key, NSString * value);
 NSString * apiGetUserData_config(NSString * key);

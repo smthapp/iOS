@@ -13,6 +13,7 @@
 
 @implementation ArticleContentCell
 @synthesize img_user, m_labelUsr, m_labelDetailInfo, m_txtViewArtContent, label_lou, img_friend;
+@synthesize view_bg;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -32,29 +33,23 @@
 
 - (CGFloat)get_height_text:(NSString *)body
 {
-    CGSize constraint;
-    double version = [[UIDevice currentDevice].systemVersion doubleValue];
-    if(version >= 7.0f){
-        constraint = CGSizeMake(m_txtViewArtContent.contentSize.width - m_txtViewArtContent.textContainer.lineFragmentPadding * 2, CGFLOAT_MAX);
-    }else{
-        constraint = CGSizeMake(m_txtViewArtContent.contentSize.width - 8.0 * 2, CGFLOAT_MAX);
-    }
-    
     CGRect rect = m_txtViewArtContent.frame;
     
-    [m_txtViewArtContent setText:body];
-    
-    rect.size.height = [m_txtViewArtContent sizeThatFits:constraint].height;
+//    [m_txtViewArtContent setText:body];
+
+    [m_txtViewArtContent setContentInfo:body];
+
+    rect.size.height = [m_txtViewArtContent get_height];
     
     [m_txtViewArtContent setFrame:rect];
     
-    return rect.origin.y + rect.size.height;
+    return rect.origin.y + rect.size.height + 8;
 }
 
 - (CGFloat)get_height:(NSString *)body :(NSArray *)att_array
 {
     CGFloat height = [self get_height_text:body];
-    
+
     //calc image
     if(att_array){
         int i;
@@ -71,7 +66,9 @@
                     height += m_txtViewArtContent.frame.size.width / 8;
                 }
             }
+            height += 2;
         }
+        height += 5;
     }
 
     return height;
@@ -116,11 +113,11 @@
     }
     
     CGFloat height = [self get_height_text:strContent];
-    
 
     if(att == nil){
-        return;
+        goto set_bg;
     }
+    
     //show image
     int i;
     CGRect rect = m_txtViewArtContent.frame;
@@ -140,9 +137,23 @@
 
         [m_imageviews addObject:imageview];
 
-        [self addSubview:imageview];
+        [view_bg addSubview:imageview];
         
         height += image_h;
+        height += 2;
+    }
+    height += 5;
+    
+set_bg:
+    {
+        CGRect rect = view_bg.frame;
+        if(lou == 0){
+            rect.origin.y += 5;
+        }
+        rect.size.height = height - 1;
+        [view_bg setFrame:rect];
+        [view_bg.layer setBorderWidth:0.5];
+        [view_bg.layer setBorderColor:[UIColor colorWithRed:205/255.0 green:205/255.0 blue:205/255.0 alpha:1.0].CGColor];
     }
 
 }

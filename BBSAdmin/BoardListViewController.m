@@ -32,9 +32,12 @@
     as_mode = 0;
     mode_subdir = true;
     
-    UILongPressGestureRecognizer * longPressGr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-    longPressGr.minimumPressDuration = 1.0;
-    [m_tableView addGestureRecognizer:longPressGr];
+    if(m_mode != 4){
+        //search mode don't support long press
+        UILongPressGestureRecognizer * longPressGr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+        longPressGr.minimumPressDuration = 1.0;
+        [m_tableView addGestureRecognizer:longPressGr];
+    }
 
     [self loadContent];
 
@@ -84,17 +87,17 @@
         if(m_mode == 2){
             //收藏夹
             if(USE_MEMBER) {
-                as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消收藏", @"驻版", nil];
+                as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消收藏", @"关注(驻版)", nil];
             }else{
                 as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消收藏", nil];
             }
         }else if(m_mode == 5){
             //驻版
-            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"收藏", @"取消驻版", nil];
+            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"收藏", @"取消关注", nil];
         }else{
             //分类讨论区
             if(USE_MEMBER) {
-                as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"收藏", @"驻版", nil];
+                as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"收藏", @"关注(驻版)", nil];
             }else{
                 as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"收藏", nil];
             }
@@ -153,10 +156,10 @@
     
     NSString * strAct;
     if(m_mode == 5){
-        strAct = @"取消驻版";
+        strAct = @"取消关注";
         [net_smth net_QuitMember:as_bname];
     }else{
-        strAct = @"驻版";
+        strAct = @"关注(驻版)";
         join_result = [net_smth net_JoinMember:as_bname];
     }
     
@@ -166,9 +169,9 @@
             msg = strAct;
         }else{
             if(join_result == 0){
-                msg = @"驻版成功，您已是正是驻版用户";
+                msg = @"关注成功，您已是正是驻版用户";
             }else{
-                msg = @"驻版成功，尚需管理员审核成为正是驻版用户";
+                msg = @"关注成功，尚需管理员审核成为正是驻版用户";
             }
         }
         UIAlertView *altview = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
@@ -184,6 +187,9 @@
     }
     else
     {
+        if(m_mode == 4){
+            apiSetMBSelect(nil, nil);
+        }
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -197,6 +203,9 @@
     }
     else
     {
+        if(m_mode == 4){
+            apiSetMBSelect(nil, nil);
+        }
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -483,7 +492,12 @@
                 [self loadContent];
             }else{
                 //real board
-                [self showArticleList:0 :0 :[dict objectForKey:@"id"] :[dict objectForKey:@"name"]];
+                if(m_mode == 4){
+                    apiSetMBSelect([dict objectForKey:@"id"], [dict objectForKey:@"name"]);
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }else{
+                    [self showArticleList:0 :0 :[dict objectForKey:@"id"] :[dict objectForKey:@"name"]];
+                }
             }
         }
     }else if(m_mode == 3){

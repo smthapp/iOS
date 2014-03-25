@@ -252,10 +252,10 @@
     
     CGFloat cell_height = [cell get_height:[dict objectForKey:@"body"] :[dict objectForKey:@"att_array"]];
 
-    if(cell_height > 150.0f){
-        return cell_height;
+    if(indexPath.row == 0){
+        return cell_height + 10;
     }else{
-        return 150.0f;
+        return cell_height;
     }
 }
 

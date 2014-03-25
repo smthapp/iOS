@@ -10,8 +10,8 @@
 #import "MBProgressHUD.h"
 #import "InfoCenter.h"
 #import "ArticleInfoCell.h"
-#import "ArticleSearchCell.h"
 #import "AppViewController.h"
+#import "NavigationMenuView/SINavigationMenuView.h"
 
 enum ArticleListMode {
     ArticleListModeNormal = 0,
@@ -21,7 +21,7 @@ enum ArticleListMode {
     ArticleListModeMailSent = 4,
     };
 
-@interface ArticleListViewController : AppViewController<UITableViewDataSource,UITableViewDelegate>
+@interface ArticleListViewController : AppViewController<UITableViewDataSource,UITableViewDelegate, SINavigationMenuDelegate, UISearchBarDelegate>
 {
     NSString * m_lBoardId;
     NSString * m_lBoardName;
@@ -35,11 +35,15 @@ enum ArticleListMode {
     
     //search submode
     bool submode_search;
+    BOOL in_search;
+    UITapGestureRecognizer * tap;
     NSString * query_title;
     NSString * query_user;
     
     //hotmode
+    SINavigationMenuView * menu;
     int hotmode_section;
+    NSArray * menu_items;
     
     //refermode
     int refermode;
@@ -47,12 +51,16 @@ enum ArticleListMode {
     //current date
     NSTimeInterval cur_time;
     long long int last_read_artid;
+    
+    //as mode
+    int as_mode;
 }
 
 @property (strong, nonatomic) IBOutlet UINavigationItem *navi;
 @property (strong, nonatomic) IBOutlet UITableView *m_tableView;
 @property (strong, nonatomic) NSMutableArray *m_mtarrayInfo;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *buttonNewArt;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchbar;
 
 - (IBAction)pressBtnBack:(id)sender;
 - (IBAction)pressBtNewArt:(id)sender;

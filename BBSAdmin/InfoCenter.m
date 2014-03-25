@@ -295,10 +295,12 @@ int apiCheckNetStatus()
     
     font_size = [(NSString *)[defaults objectForKey:@"font_size"] intValue];
     if(font_size < 8 || font_size > 32){
-        font_size = 14;
+        font_size = 16;
     }
     
     article_sort = [(NSString *)[defaults objectForKey:@"article_sort"] intValue];
+    
+    order_threadid = [(NSString *)[defaults objectForKey:@"order_threadid"] intValue];
 }
 
 -(NSString *)getLoginInfoUsr

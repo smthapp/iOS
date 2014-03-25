@@ -9,6 +9,51 @@
 #import "MessagesViewController.h"
 #import "ParentTabBarViewController.h"
 #import "UIViewController+AppGet.h"
+#import "FriendListViewController.h"
+#import "BoardListViewController.h"
+
+static MessagesViewController * _g_message_view = nil;
+static void message_view_update(){
+    if(_g_message_view == nil){
+        return;
+    }
+    [_g_message_view refresh];
+}
+void message_tabbar_update();
+
+void message_unread_check(bool force)
+{
+    if(g_tabbar == nil){
+        //not login, ignore
+        return;
+    }
+    if(!force && appSetting->unread_apns_cnt == 0){
+        return;
+    }
+    if(appSetting->unread_is_updating){
+        return;
+    }
+    appSetting->unread_is_updating = true;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+#ifdef DEBUG
+        NSLog(@"real check unread");
+#endif
+        AppViewController * view_test = [[AppViewController alloc] init];
+        [view_test init_without_UI];
+            
+        //load unread count
+        [view_test update_unread];
+        appSetting->unread_apns_cnt = 0;
+
+        //set message view
+        message_view_update();
+        //set tabbar
+        message_tabbar_update();
+
+        appSetting->unread_is_updating = false;
+    });
+}
 
 @interface MessagesViewController ()
 
@@ -16,16 +61,14 @@
 
 @implementation MessagesViewController
 @synthesize m_tableView;
+@synthesize navi;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    reply_count = 0;
-    reply_unread = 0;
-    
-    [self loadContent];
+
+    navi.title = [appSetting getLoginInfoUsr];
 }
 
 - (IBAction)pressBtnBack:(id)sender
@@ -34,29 +77,25 @@
     return;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    _g_message_view = self;
+
+    message_unread_check(false);
+
+    //clear APN in UI thread
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    _g_message_view = nil;
+}
+
 -(void)parseContent
 {
-    m_bLoadRes = 1;
-    net_ops = 3;
-    
-    NSDictionary * dict = [net_smth net_GetReferCount:2];
-    if(dict) {
-        reply_count = [(NSString*)[dict objectForKey:@"total_count"] intValue];
-        reply_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
-    }
-    dict = [net_smth net_GetReferCount:1];
-    if(dict) {
-        at_count = [(NSString*)[dict objectForKey:@"total_count"] intValue];
-        at_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
-    }
-
-    dict = [net_smth net_GetMailCount];
-    if(dict) {
-        mail_count = [(NSString*)[dict objectForKey:@"total_count"] intValue];
-        mail_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
-        mail_isfull = [(NSString *)[dict objectForKey:@"is_full"] intValue];
-    }
-    mail_count_send = -1;
+    message_unread_check(true);
 }
 
 -(void)moreContent
@@ -66,12 +105,28 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
+        return @"我的消息";
+    }
+    else
+    {
+        return @"我的关注";
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    if(section == 0){
+        return 4;
+    }else{
+        return 3;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -85,22 +140,58 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString * strName = @"";
-    switch (indexPath.row) {
+    int unread = 0;
+    NSString * icon_name = nil;
+    
+    switch (indexPath.section) {
         case 0:
-            strName = @"回复我的文章";
-            break;
+        {
+            switch (indexPath.row) {
+                case 0:
+                    strName = @"回复我的文章";
+                    unread = appSetting->reply_unread;
+                    icon_name = @"refer_article.png";
+                    break;
+                case 1:
+                    strName = @"@我的文章";
+                    unread = appSetting->at_unread;
+                    icon_name = @"refer_at.png";
+                    break;
+                case 2:
+                    strName = @"邮件-收件箱";
+                    unread = appSetting->mail_unread;
+                    icon_name = @"email_inbox.png";
+                    break;
+                case 3:
+                    strName = @"邮件-发件箱";
+                    icon_name = @"email_sent.png";
+                    break;
+                default:
+                    break;
+            }
+        }
+        break;
         case 1:
-            strName = @"@我的文章";
-            break;
-        case 2:
-            strName = @"邮件-收件箱";
-            break;
-        case 3:
-            strName = @"邮件-发件箱";
-            break;
         default:
-            break;
+        {
+            switch (indexPath.row){
+                case 0:
+                    strName = @"我关注的好友";
+                    icon_name = @"icon_contact.png";
+                    break;
+                case 1:
+                    strName = @"我收藏的版面";
+                    icon_name = @"icon_fav.png";
+                    break;
+                default:
+                    strName = @"我关注的版面";
+                    icon_name = @"icon_member.png";
+                    break;
+            }
+        }
+        break;
     }
+    
     
     static NSString *root_cellId;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
@@ -115,23 +206,8 @@
     
     [cell setBackgroundColor:[UIColor clearColor]];
 
-    switch (indexPath.row) {
-        case 0:
-            [cell setContentInfo:strName :reply_count :reply_unread :[UIImage imageNamed:@"refer_article.png"]];
-            break;
-        case 1:
-            [cell setContentInfo:strName :at_count :at_unread :[UIImage imageNamed:@"refer_at.png"]];
-            break;
-        case 2:
-            [cell setContentInfo:strName :mail_count :mail_unread :[UIImage imageNamed:@"email_inbox.png"]];
-            break;
-        case 3:
-            [cell setContentInfo:strName :mail_count_send :0 :[UIImage imageNamed:@"email_sent.png"]];
-            break;
-        default:
-            [cell setContentInfo:strName :0 :0 :nil];
-            break;
-    }
+    [cell setContentInfo:strName :unread :(icon_name == nil ? nil : [UIImage imageNamed:icon_name])];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
 
@@ -139,7 +215,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.row) {
+    if(indexPath.section == 0){
+        switch (indexPath.row) {
         case 0:
             [self showReferList:2];
             break;
@@ -154,8 +231,45 @@
             break;
         default:
             break;
+        }
+    }else{
+        switch (indexPath.row) {
+            case 0:
+                [self showFriendList];
+                break;
+            case 1:
+                [self showFavBoard];
+                break;
+            default:
+                [self showMemberBoardList];
+                break;
+        }
     }
+    [m_tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+-(void)showFavBoard
+{
+    BoardListViewController *brdlistViewController = [UIViewController appGetView:@"BoardListViewController"];
     
+    [brdlistViewController setContentInfo:2 :nil];
+    
+    [self presentViewController:brdlistViewController animated:YES completion:nil];
+    
+}
+-(void)showMemberBoardList
+{
+    BoardListViewController *brdlistViewController = [UIViewController appGetView:@"BoardListViewController"];
+    
+    [brdlistViewController setContentInfo:5 :nil];
+    
+    [self presentViewController:brdlistViewController animated:YES completion:nil];
+}
+
+-(void)showFriendList{
+    FriendListViewController *friendlistViewController = [UIViewController appGetView:@"FriendListViewController"];
+
+    [self presentViewController:friendlistViewController animated:YES completion:nil];
 }
 
 -(void)showReferList:(int)refermode
@@ -176,15 +290,13 @@
 -(void)updateContent
 {
     [m_tableView reloadData];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
-    //clear APN in UI thread
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    tabbar_message_set_notify(0);
-    tabbar_message_check_notify();
+}
+
+-(void)refresh
+{
+    [self performSelectorOnMainThread:@selector(updateContent) withObject:nil waitUntilDone:NO];
 }
 
 @end
+
+

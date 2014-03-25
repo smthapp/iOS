@@ -14,6 +14,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *imageview_dir;
 
 //public API
--(void)setContentInfo:(NSString*)name :(int)total :(int)unread :(UIImage *)image;
+-(void)setContentInfo:(NSString*)name :(int)unread :(UIImage *)image;
 
 @end

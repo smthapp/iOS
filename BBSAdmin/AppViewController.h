@@ -67,6 +67,7 @@
  */
 - (void)updateContent;
 
+-(void)update_unread;
 
 -(void)init_without_UI;
 

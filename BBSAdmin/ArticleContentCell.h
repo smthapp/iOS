@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UIFaceImageView.h"
+#import "ContentLabel.h"
 
 @interface ArticleContentCell : UITableViewCell
 {
@@ -21,10 +22,11 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *m_labelUsr;
 @property (strong, nonatomic) IBOutlet UILabel *m_labelDetailInfo;
-@property (strong, nonatomic) IBOutlet UITextView *m_txtViewArtContent;
 @property (strong, nonatomic) IBOutlet UILabel *label_lou;
 @property (strong, nonatomic) IBOutlet UIFaceImageView *img_user;
 @property (strong, nonatomic) IBOutlet UIImageView *img_friend;
+@property (strong, nonatomic) IBOutlet ContentLabel *m_txtViewArtContent;
+@property (strong, nonatomic) IBOutlet UIView *view_bg;
 
 //public API
 - (void)setContentInfo:(NSString*)strHeader :(NSString*)strUsr :(NSString*)strDetailInfo :(NSString*)strContent :(int)_lou :(NSArray *)_att :(UITableView *)_tv :(NSIndexPath *)_ip :(UIViewController *)_parent;

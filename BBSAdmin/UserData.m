@@ -228,6 +228,82 @@ int apiGetUserData_is_friends(NSString * userid)
     return 0;
 }
 
+/**** board history *****/
+static NSMutableArray * userdata_bhis = nil;
+static NSString * userdata_bhis_userid;
+
+static NSString * userdata_bhis_get_fname(NSString * userid){
+    NSString *localUserPath = userdata_get_path(userid);
+    
+    return [localUserPath stringByAppendingPathComponent:@"bhistory"];
+}
+
+static void userdata_load_bhis(NSString * userid)
+{
+    if(userdata_bhis && [userid isEqualToString:userdata_bhis_userid]){
+        return;
+    }
+    
+    userdata_bhis = nil;
+    
+    NSString * fname = userdata_bhis_get_fname(userid);
+#ifdef DEBUG
+    NSLog(@"init bhis:%@", fname);
+#endif
+    
+    userdata_bhis = [NSMutableArray arrayWithContentsOfFile:fname];
+    if(userdata_bhis == nil){
+        userdata_bhis = [[NSMutableArray alloc] init];
+    }
+    userdata_bhis_userid = [userid copy];
+}
+
+NSMutableArray * apiGetUserData_bhis()
+{
+    userdata_load_bhis([appSetting getLoginInfoUsr]);
+    
+    return userdata_bhis;
+}
+
+static int apiSetUserData_bhis(NSMutableArray * bhis)
+{
+    NSString * fname = userdata_bhis_get_fname([appSetting getLoginInfoUsr]);
+    [bhis writeToFile:fname atomically:YES];
+    
+    userdata_bhis = nil;
+    
+    userdata_load_bhis([appSetting getLoginInfoUsr]);
+    
+    return 0;
+}
+
+#define MAX_BHIS 30
+int apiSetUserData_add_bhis(NSDictionary * brd)
+{
+    userdata_load_bhis([appSetting getLoginInfoUsr]);
+    
+    int i;
+    for(i=0; i < [userdata_bhis count]; i++){
+        NSDictionary * a = [userdata_bhis objectAtIndex:i];
+        if([(NSString *)[a objectForKey:@"id"] caseInsensitiveCompare:(NSString *)[brd objectForKey:@"id"]] == NSOrderedSame){
+            break;
+        }
+    }
+    if(i < [userdata_bhis count]){
+        [userdata_bhis removeObjectAtIndex:i];
+    }
+    
+    if([userdata_bhis count] >= MAX_BHIS){
+        [userdata_bhis removeObjectAtIndex:0];
+    }
+    
+    [userdata_bhis addObject:brd];
+    
+    apiSetUserData_bhis(userdata_bhis);
+    
+    return 0;
+}
+
 //config
 static NSMutableDictionary * userdata_config = nil;
 static NSString * userdata_config_userid;

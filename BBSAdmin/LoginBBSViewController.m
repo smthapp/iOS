@@ -148,7 +148,7 @@
 #ifdef DEBUG
     USE_MEMBER = true;
 #else
-    if([(NSString *)[dict objectForKey:@"use_member"] intValue] > 0){
+    if([(NSString *)[dict objectForKey:@"use_nmember"] intValue] > 0){
         USE_MEMBER = true;
     }
 #endif
@@ -245,6 +245,9 @@
     ParentTabBarViewController * parentTabBarController = [UIViewController appGetView:@"ParentTabBarController"];
     
     g_tabbar = parentTabBarController;
+
+    /* check mesages after login */
+    message_unread_check(true);
     
     [self presentViewController:parentTabBarController animated:YES completion:nil];
 }
@@ -285,7 +288,8 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             AppViewController * view_test = [[AppViewController alloc] init];
             [view_test init_without_UI];
-            
+
+            //update friendlist
             long long f_new_ts = [view_test->net_smth net_LoadUserFriendsTS:[appSetting getLoginInfoUsr]];
             if(f_new_ts == 0){
                 NSLog(@"friends new ts 0, exit");
@@ -313,8 +317,22 @@
                     apiSetUserData_config(@"friends_ts", [NSString stringWithFormat:@"%lld",f_new_ts]);
                 }
             }
+            
+            //update member boards
+            NSArray * arrayInfo = [view_test->net_smth net_LoadMember:[appSetting getLoginInfoUsr] :0 :100];
+            if (net_smth->net_error == 0 && arrayInfo != nil && [arrayInfo count] > 0){
+                NSMutableArray * m_mtarrayInfo = [NSMutableArray arrayWithCapacity:10];
+                NSEnumerator * e = [arrayInfo objectEnumerator];
+                for(NSDictionary * ele in e){
+                    NSDictionary * dict_board = [ele objectForKey:@"board"];
+                    if(dict_board){
+                        [m_mtarrayInfo addObject:dict_board];
+                    }
+                }
+                apiSetUserData_MBList(m_mtarrayInfo);
+            }
+
         });
-        /* load friends list done */
             
         
         if(ret_newversion == 2){
@@ -332,12 +350,14 @@
         }
 
         [self goContentView];
+    }else if (ret_newversion > 0 && ret_pwd == 0){
+        UIAlertView *altview = [[UIAlertView alloc]initWithTitle:@"错误" message:@"用户名密码错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [altview show];
     }
 }
     
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"click:%ld", (long)buttonIndex);
     if(buttonIndex == 0){
         //cancel:
         if(alert_delegate_mode == 1){

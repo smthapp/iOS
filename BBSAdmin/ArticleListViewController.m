@@ -22,7 +22,7 @@
 @synthesize m_tableView;
 @synthesize m_mtarrayInfo;
 @synthesize buttonNewArt;
-@synthesize navi;
+@synthesize navi, searchbar;
 
 - (void)viewDidLoad
 {
@@ -31,6 +31,7 @@
     m_mtarrayInfo = [NSMutableArray arrayWithCapacity:10];
     articles_cnt = 0;
     submode_search = false;
+    as_mode = 0;
     
     if(mode == ArticleListModeMail || mode == ArticleListModeMailSent){
         UIBarButtonItem* newmail = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"新邮件", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(pressBtNewArt:)];
@@ -43,7 +44,126 @@
     }else{
     }
 
+    if (mode == ArticleListModeHot) {
+        menu_items = @[@"全站", @"社区管理", @"国内院校", @"休闲娱乐", @"五湖四海", @"游戏运动", @"社会信息", @"知性感性", @"文化人文", @"学术科学", @"电脑技术"];
+        CGRect frame = CGRectMake(0.0, 0.0, 200.0, 44);
+        menu = [[SINavigationMenuView alloc] initWithFrame:frame title:@"全站 热点" :nil];
+        [menu displayMenuInView:self.view];
+        menu.items = menu_items;
+        menu.delegate = self;
+        navi.titleView = menu;
+    }else if(mode == ArticleContentViewModeNormal){
+        menu_items = @[@"搜索版内文章", @"收藏本版", @"关注本版(驻版)"];
+        CGRect frame = CGRectMake(0.0, 0.0, 200.0, 44);
+        menu = [[SINavigationMenuView alloc] initWithFrame:frame title:m_lBoardName :@"arrow_search.png"];
+        [menu displayMenuInView:self.view];
+        menu.items = menu_items;
+        menu.delegate = self;
+        navi.titleView = menu;
+        
+        in_search = false;
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tableview_tapped)];
+    }
+    
     [self initContent];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+}
+
+
+
+-(void)hide_searchbar
+{
+    [searchbar resignFirstResponder];
+    [searchbar setHidden:YES];
+    in_search = false;
+    [m_tableView removeGestureRecognizer:tap];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [self hide_searchbar];
+    navi.titleView = menu;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [self hide_searchbar];
+    
+    navi.titleView = nil;
+    if(searchbar.selectedScopeButtonIndex == 0){
+        [self search_title:searchbar.text];
+        
+        navi.title = @"搜索标题";
+    }else{
+        [self search_user:searchbar.text];
+        
+        navi.title = @"搜索作者";
+    }
+}
+
+-(void)tableview_tapped{
+    if(in_search) {
+        [self hide_searchbar];
+    }
+}
+
+- (void)as_setfav
+{
+    NSString * strAct;
+    strAct = @"收藏";
+    [net_smth net_AddFav:m_lBoardId];
+    
+    if(net_smth->net_error == 0){
+        UIAlertView *altview = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:[NSString stringWithFormat:@"%@成功",strAct] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [altview show];
+    }
+}
+
+- (void)as_setmember
+{
+    int join_result;
+    
+    NSString * strAct;
+    strAct = @"关注(驻版)";
+    join_result = [net_smth net_JoinMember:m_lBoardId];
+    
+    if(net_smth->net_error == 0){
+        NSString * msg;
+        if(join_result == 0){
+            msg = @"关注成功，您已是正是驻版用户";
+        }else{
+            msg = @"关注成功，尚需管理员审核成为正是驻版用户";
+        }
+        UIAlertView *altview = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:msg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [altview show];
+    }
+}
+
+
+- (void)didSelectItemAtIndex:(NSUInteger)index
+{
+    if(mode == ArticleListModeHot){
+        hotmode_section = (int)index;
+        [menu setMenuTitle:[NSString stringWithFormat:@"%@ 热点",[menu_items objectAtIndex:index]]];
+    
+        [self initContent];
+    }else if(mode == ArticleListModeNormal) {
+        if(index == 0){
+            [searchbar setHidden:NO];
+            [searchbar becomeFirstResponder];
+            in_search = true;
+            
+            [m_tableView addGestureRecognizer:tap];
+        }else if(index == 1){
+            as_mode = 1;
+            [self loadContent];
+        }else if(index == 2){
+            as_mode = 2;
+            [self loadContent];
+        }
+    }
 }
 
 - (void)initCurDate
@@ -67,6 +187,8 @@
 {
     if(submode_search){
         submode_search = false;
+        
+        navi.titleView = menu;
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
         [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -130,15 +252,13 @@
 -(void)settitle
 {
     if(submode_search){
-        navi.title = @"搜索结果";
     }else{
         if(mode == ArticleListModeHot){
-            navi.title = @"热门话题";
         }else if(mode == ArticleListModeNormal){
             if(m_lBoardName != nil){
-                navi.title = m_lBoardName;
+                [menu setMenuTitle:m_lBoardName];
             }else{
-                navi.title = m_lBoardId;
+                [menu setMenuTitle:m_lBoardId];
             }
         }else if(mode == ArticleListModeMail){
             navi.title = @"收件箱";
@@ -154,6 +274,18 @@
 
 -(void)parseContent
 {
+    if(as_mode) {
+        if(as_mode == 1){
+            [self as_setfav];
+        }
+        if(as_mode == 2){
+            [self as_setmember];
+        }
+        as_mode = 0;
+        //as mode don't need update UI
+        return;
+    }
+
     net_ops = 2;
     
     if(load_init_mode){
@@ -166,12 +298,6 @@
             if(mode == ArticleListModeHot){
                 new_articles_cnt = 10;
             }else if(mode == ArticleListModeNormal){
-                //normal mode
-                if(m_lBoardName) {
-                    navi.title = m_lBoardName;
-                }else{
-                    navi.title = m_lBoardId;
-                }
                 new_articles_cnt = [net_smth net_GetThreadCnt:m_lBoardId];
                 
                 last_read_artid = apiGetUserData_BRC(m_lBoardId);
@@ -257,7 +383,10 @@
         }
     }
     
-    if (net_smth->net_error == 0 && [arrayInfo count] > 0)
+    if (submode_search && net_smth->net_error == 0 && [arrayInfo count] == 0 && from == 0){
+        m_bLoadRes = 1;
+        [m_mtarrayInfo removeAllObjects];
+    }else if (net_smth->net_error == 0 && [arrayInfo count] > 0)
     {
         m_bLoadRes = 1;
         [self initCurDate];
@@ -305,6 +434,12 @@
                     if(_latest_read){
                         apiSetUserData_BRC(m_lBoardId, _latest_read);
                     }
+                    
+                    //update board history
+                    NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
+                    [dict setObject:m_lBoardId forKey:@"id"];
+                    [dict setObject:m_lBoardName forKey:@"name"];
+                    apiSetUserData_add_bhis(dict);
                 }
                 
                 size += load_size;
@@ -339,7 +474,7 @@
     if(mode == ArticleListModeHot){
         return [m_mtarrayInfo count];
     }else if(!submode_search && mode == ArticleListModeNormal){
-        return [m_mtarrayInfo count] + 2;
+        return [m_mtarrayInfo count] + 1;
     }else{
         return [m_mtarrayInfo count] + 1;
     }
@@ -350,10 +485,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
         return 54.0f;
     }else{
-        if(!submode_search && mode == ArticleListModeNormal && indexPath.row == 0){
-            return 30.0f;
-        }
-        return 54.0f;
+        return 60.0f;
     }
 }
 
@@ -362,23 +494,14 @@
 #ifdef DEBUG
     //NSLog(@"cellforrow:%d", indexPath.row);
 #endif
-    int type=0; //0:article, 1:search, 2:more
-    int article_idx = 0;
-    if(!submode_search && mode == ArticleListModeNormal){
-        if(indexPath.row == 0){
-            type = 1;
-        }else if(indexPath.row >= ([m_mtarrayInfo count]+1)){
-            type = 2;
-        }else{
-            type = 0;
-            article_idx = (int)indexPath.row - 1;
-        }
-    }else{
+    int type=0; //0:article, 2:more
+    int article_idx = (int)indexPath.row;
+    
+    {
         if(indexPath.row >= [m_mtarrayInfo count]){
             type = 2;
         }else{
             type = 0;
-            article_idx = (int)indexPath.row;
         }
     }
     
@@ -398,26 +521,6 @@
         cell.detailTextLabel.text = @"";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-        return cell;
-    }else if(type == 1){
-        //search cell
-        static NSString *search_cellId;
-        
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-            search_cellId = @"ArticleSearchCell_iPad";
-        else
-            search_cellId = @"ArticleSearchCell_iPhone";
-        ArticleSearchCell *cell = (ArticleSearchCell*)[self.m_tableView dequeueReusableCellWithIdentifier:search_cellId];
-        if (cell == nil) {
-            NSArray *nibArray = [[NSBundle mainBundle] loadNibNamed:search_cellId owner:self options:nil];
-            cell = (ArticleSearchCell*)[nibArray objectAtIndex:0];
-        }
-        
-        //clear cell
-        [cell setBackgroundColor:[UIColor clearColor]];
-        
-        [cell setContentInfo:self];
-        
         return cell;
     }else{
         //article cell
@@ -547,29 +650,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     int type=0; //0:article, 1:search, 2:more
-    int article_idx = 0;
-    if(!submode_search && mode == ArticleListModeNormal){
-        if(indexPath.row == 0){
-            type = 1;
-        }else if(indexPath.row >= ([m_mtarrayInfo count]+1)){
-            type = 2;
-        }else{
-            type = 0;
-            article_idx = (int)indexPath.row - 1;
-        }
-    }else{
+    int article_idx = (int)indexPath.row;
+    
+    {
         if(indexPath.row >= [m_mtarrayInfo count]){
             type = 2;
         }else{
             type = 0;
-            article_idx = (int)indexPath.row;
         }
     }
     
     if (type == 2){
         [self moreContent];
-    }else if(type == 1){
-
     }else{
         NSDictionary *dict = [m_mtarrayInfo objectAtIndex:(article_idx)];
         if (dict){
@@ -580,10 +672,22 @@
                 [self showArticleContent:m_lBoardId :m_lBoardName :article_id :[(NSString *)[dict objectForKey:@"count"] intValue]];
             }else if(mode == ArticleListModeMail){
                 [self showArticleContent:nil :nil :0 :[(NSString*)[dict objectForKey:@"position"] intValue]];
+                NSString * flags = [dict objectForKey:@"flags"];
+                NSString * flag0 = [flags substringToIndex:1];
+                
+                if([flag0 isEqualToString:@"N"]){
+                    //unread article, after read this, force check unread again
+                    appSetting->unread_apns_cnt = 1;
+                }
             }else if(mode == ArticleListModeMailSent){
                 [self showArticleContent:nil :nil :0 :[(NSString*)[dict objectForKey:@"position"] intValue]];
             }else{
                 [self showArticleContent:[dict objectForKey:@"board_id"] :nil :[(NSString*)[dict objectForKey:@"id"] intValue] :[(NSString*)[dict objectForKey:@"position"] intValue]];
+                int flag = [(NSString *)[dict objectForKey:@"flag"] intValue];
+                if(flag == 0){
+                    //unread article, after read this, force check unread again
+                    appSetting->unread_apns_cnt = 1;
+                }
             }
 
         }

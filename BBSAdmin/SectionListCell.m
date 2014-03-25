@@ -9,7 +9,7 @@
 #import "SectionListCell.h"
 
 @implementation SectionListCell
-@synthesize label_name;
+@synthesize label_name, img_icon;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -27,9 +27,12 @@
     // Configure the view for the selected state
 }
 
--(void)setContentInfo:(NSString*)name
+-(void)setContentInfo:(NSString*)name :(NSString *)icon
 {
     [label_name setText:name];
+    if(icon){
+        img_icon.image = [UIImage imageNamed:icon];
+    }
 }
 
 @end

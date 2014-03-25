@@ -17,11 +17,10 @@
 @property(strong, nonatomic) MBProgressHUD *m_progressBar;
 
 - (void)showWelcomeTip;
+- (void)refresh;
 
 @end
 
 extern ParentTabBarViewController * g_tabbar;
 
 
-void tabbar_message_set_notify(int count);
-void tabbar_message_check_notify();

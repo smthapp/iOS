@@ -87,7 +87,7 @@
 -(int)net_JoinMember:(NSString *)board_id;
 -(int)net_QuitMember:(NSString *)board_id;
 //timeline
--(NSArray *)net_LoadTimelineList:(int)friends :(long)from :(long)size;
+-(NSArray *)net_LoadTimelineList:(int)friends :(int)loadold :(long)oldid :(long)size :(int)order_thread;
 //guess
 -(NSArray *)net_ListGuess;
 -(NSArray *)net_ListMatch;

@@ -46,6 +46,15 @@ int apiCheckNetStatus();//-1:net disconnection 0:mobile net 1:wifi
     
     int article_sort;
     
+    int mail_unread;
+    int at_unread;
+    int reply_unread;
+
+    int unread_apns_cnt; //notifications from apns. set when received notifications. clear after message_unread_check(). The tarbar badge should set to unread+apns_cnt.
+    bool unread_is_updating; //不管任何时候，只有一个dispatch_async()在跑。
+    
+    int order_threadid; //0: order by articleid, 1: order by threadid
+
 @private
     NSString * strUsr;
     NSString * strPwd;
@@ -69,5 +78,11 @@ void apiAppSettingInit();
 
 NSString * appGetDateString(NSTimeInterval time, NSTimeInterval cur_time);
 NSString * appGetDateStringAfter(NSTimeInterval time, NSTimeInterval cur_time);
+
+//UI update func
+//void message_tabbar_update();
+//void message_view_update();
+
+void message_unread_check(bool force); //force==0: check only unread_apns_cnt > 0
 
 #endif

@@ -135,6 +135,10 @@
     switch(net_smth->net_error){
         case 10319:
             return @"添加失败,该版面可能已在收藏夹";
+        case 10401:
+            return @"您没有关注任何版面。在版面列表长按版面可以关注版面";
+        case 10402:
+            return @"关注失败,您可能已关注此版(驻版)";
         default:
             return nil;
     }
@@ -179,7 +183,7 @@
     net_usercancel = true;
 
     m_progressBar.labelText = [NSString stringWithFormat:@"取消加载..."];
-    usleep(1000000);
+    usleep(500000);
 }
 
 - (void)update_netop_show
@@ -209,6 +213,24 @@
     net_ops_percent = (net_ops_done * 100 + percent) / net_ops;
     
     [self update_netop_show];
+}
+
+-(void)update_unread
+{
+    net_ops = 3;
+
+    NSDictionary * dict = [net_smth net_GetReferCount:2];
+    if(dict) {
+        appSetting->reply_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
+    }
+    dict = [net_smth net_GetReferCount:1];
+    if(dict) {
+        appSetting->at_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
+    }
+    dict = [net_smth net_GetMailCount];
+    if(dict) {
+        appSetting->mail_unread = [(NSString*)[dict objectForKey:@"new_count"] intValue];
+    }
 }
 
 @end

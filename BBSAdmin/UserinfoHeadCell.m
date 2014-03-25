@@ -47,7 +47,7 @@
         face_id = userid;
     }
     
-    if([userid isEqualToString:[appSetting getLoginInfoUsr]]){
+    if([userid caseInsensitiveCompare:[appSetting getLoginInfoUsr]] == NSOrderedSame){
         [img_face setContentInfo:face_id :2 :parent];
     }else{
         [img_face setContentInfo:face_id :0 :nil];

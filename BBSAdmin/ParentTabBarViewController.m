@@ -7,41 +7,18 @@
 //
 
 #import "ParentTabBarViewController.h"
+#import "InfoCenter.h"
+#import "TimelineListViewController.h"
 
 ParentTabBarViewController * g_tabbar = nil;
 
-static int tabbar_message_count = 0;
-static int tabbar_message_newcount = 0;
-void tabbar_message_set_notify(int count)
+void message_tabbar_update()
 {
-#ifdef DEBUG
-    NSLog(@"set message notify:%d -> %d", tabbar_message_count, count);
-#endif
-    tabbar_message_newcount = count;
-}
-
-void tabbar_message_check_notify()
-{
-    if(g_tabbar == nil || tabbar_message_newcount == tabbar_message_count){
+    if(g_tabbar == nil){
         return;
     }
     
-#ifdef DEBUG
-    NSLog(@"message:%d -> %d", tabbar_message_count, tabbar_message_newcount);
-#endif
-
-    UITabBarItem * t = [g_tabbar.tabBar.items objectAtIndex:1];
-    if(t == nil){
-        return;
-    }
-    
-    if(tabbar_message_newcount){
-        [t setBadgeValue:[NSString stringWithFormat:@"%d", tabbar_message_newcount]];
-    }else{
-        [t setBadgeValue:nil];
-    }
-    
-    tabbar_message_count = tabbar_message_newcount;
+    [g_tabbar refresh];
 }
 
 @interface ParentTabBarViewController ()
@@ -66,7 +43,7 @@ void tabbar_message_check_notify()
 	// Do any additional setup after loading the view.
     [self showWelcomeTip];
     
-    tabbar_message_check_notify();
+    message_tabbar_update();
 }
 
 - (void)didReceiveMemoryWarning
@@ -109,6 +86,45 @@ void tabbar_message_check_notify()
     {
         [m_progressBar removeFromSuperview];
         m_progressBar = nil;
+    }
+}
+
+- (void)refresh
+{
+    [self performSelectorOnMainThread:@selector(updateContent) withObject:nil waitUntilDone:NO];
+}
+
+-(void)updateContent
+{
+    int count = appSetting->unread_apns_cnt + appSetting->at_unread + appSetting->mail_unread + appSetting->reply_unread;
+    
+#ifdef DEBUG
+    NSLog(@"message:%d", count);
+#endif
+    
+    UITabBarItem * t = [self.tabBar.items objectAtIndex:1];
+    if(t == nil){
+        return;
+    }
+    
+    if(count){
+        [t setBadgeValue:[NSString stringWithFormat:@"%d", count]];
+    }else{
+        [t setBadgeValue:nil];
+    }
+}
+
+extern TimelineListViewController * timeline_view_controller;
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    if(item.tag == 1){
+        if(timeline_view_controller != nil){
+            if([timeline_view_controller.m_mtarrayInfo count] > 0){
+                NSIndexPath * indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+                [timeline_view_controller.m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            }
+            [timeline_view_controller initContent];
+        }
     }
 }
 
