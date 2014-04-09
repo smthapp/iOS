@@ -57,6 +57,10 @@
         }
         [btn_mbselect setHidden:YES];
         navi.title = @"发送邮件";
+        
+        UIBarButtonItem * btn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"发送", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(pressBtSend:)];
+        
+        navi.rightBarButtonItem = btn;
     }
     
     if(reply){

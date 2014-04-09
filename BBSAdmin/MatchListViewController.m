@@ -184,8 +184,6 @@
         if (m_bLoadRes == 1)
         {
             [m_tableView reloadData];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-            [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
         }
         
         [m_progressBar removeFromSuperview];

@@ -127,8 +127,6 @@
 -(void)updateContent
 {
     [m_tableView reloadData];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [m_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 

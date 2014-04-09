@@ -41,7 +41,6 @@
 		31103707189F673800CB0793 /* MatchHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31103706189F673800CB0793 /* MatchHeadCell.m */; };
 		3110370A189F67AC00CB0793 /* MatchHeadCell_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31103708189F67AC00CB0793 /* MatchHeadCell_iPad.xib */; };
 		3110370B189F67AC00CB0793 /* MatchHeadCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31103709189F67AC00CB0793 /* MatchHeadCell_iPhone.xib */; };
-		31185DAC18E14B0000365A2F /* libSMTH_0.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31185DAB18E14B0000365A2F /* libSMTH_0.2.0.a */; };
 		315EF41A18B3393A0033CE17 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 315EF41918B3393A0033CE17 /* camera.png */; };
 		316CBF6618C9A3F600F40D50 /* client_signature.m in Sources */ = {isa = PBXBuildFile; fileRef = 316CBF6518C9A3F600F40D50 /* client_signature.m */; };
 		319032F618C0E6E300B8ECE4 /* PictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 319032F518C0E6E300B8ECE4 /* PictureViewController.m */; };
@@ -68,6 +67,7 @@
 		3195188A18C04AE600BC2FD8 /* FriendListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3195188918C04AE600BC2FD8 /* FriendListCell.m */; };
 		3195188E18C04B1500BC2FD8 /* FriendListCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3195188D18C04B1500BC2FD8 /* FriendListCell_iPhone.xib */; };
 		3195189018C04B2B00BC2FD8 /* FriendListCell_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3195188F18C04B2B00BC2FD8 /* FriendListCell_iPad.xib */; };
+		319C53B418F58F16004E4AD4 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319C53B318F58F16004E4AD4 /* libSMTH_0.2.3.a */; };
 		319D3E7918A0C0BD00A6FAB9 /* email_inbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 319D3E7518A0C0BD00A6FAB9 /* email_inbox.png */; };
 		319D3E7A18A0C0BD00A6FAB9 /* guess_match.png in Resources */ = {isa = PBXBuildFile; fileRef = 319D3E7618A0C0BD00A6FAB9 /* guess_match.png */; };
 		319D3E7B18A0C0BD00A6FAB9 /* refer_article.png in Resources */ = {isa = PBXBuildFile; fileRef = 319D3E7718A0C0BD00A6FAB9 /* refer_article.png */; };
@@ -103,7 +103,6 @@
 		31E6DB1F18D4311800C91597 /* icon_contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB1E18D4311800C91597 /* icon_contact.png */; };
 		31E6DB2118D43CDC00C91597 /* icon_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB2018D43CDC00C91597 /* icon_search.png */; };
 		31E6DB2318D46D7100C91597 /* icon_search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB2218D46D7100C91597 /* icon_search@2x.png */; };
-		31E6DB2518D46E1200C91597 /* libSMTH_0.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E6DB2418D46E1200C91597 /* libSMTH_0.1.0.a */; };
 		31E6DB2718D46F5E00C91597 /* icon_timeline.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB2618D46F5E00C91597 /* icon_timeline.png */; };
 		31E6DB2918D46FC400C91597 /* icon_member.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB2818D46FC400C91597 /* icon_member.png */; };
 		31E6DB2C18D4803200C91597 /* icon_back1.png in Resources */ = {isa = PBXBuildFile; fileRef = 31E6DB2A18D4803200C91597 /* icon_back1.png */; };
@@ -244,7 +243,6 @@
 		31103706189F673800CB0793 /* MatchHeadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MatchHeadCell.m; path = BBSAdmin/MatchHeadCell.m; sourceTree = "<group>"; };
 		31103708189F67AC00CB0793 /* MatchHeadCell_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MatchHeadCell_iPad.xib; path = BBSAdmin/MatchHeadCell_iPad.xib; sourceTree = "<group>"; };
 		31103709189F67AC00CB0793 /* MatchHeadCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MatchHeadCell_iPhone.xib; path = BBSAdmin/MatchHeadCell_iPhone.xib; sourceTree = "<group>"; };
-		31185DAB18E14B0000365A2F /* libSMTH_0.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSMTH_0.2.0.a; path = BBSAdmin/libSMTH/libSMTH_0.2.0.a; sourceTree = "<group>"; };
 		315EF41918B3393A0033CE17 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		316CBF6518C9A3F600F40D50 /* client_signature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = client_signature.m; sourceTree = "<group>"; };
 		316EEC8C1888FF360096133E /* client_signature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = client_signature.h; path = BBSAdmin/client_signature.h; sourceTree = "<group>"; };
@@ -287,6 +285,7 @@
 		3195188918C04AE600BC2FD8 /* FriendListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendListCell.m; path = BBSAdmin/FriendListCell.m; sourceTree = "<group>"; };
 		3195188D18C04B1500BC2FD8 /* FriendListCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FriendListCell_iPhone.xib; path = BBSAdmin/FriendListCell_iPhone.xib; sourceTree = "<group>"; };
 		3195188F18C04B2B00BC2FD8 /* FriendListCell_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FriendListCell_iPad.xib; path = BBSAdmin/FriendListCell_iPad.xib; sourceTree = "<group>"; };
+		319C53B318F58F16004E4AD4 /* libSMTH_0.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSMTH_0.2.3.a; path = BBSAdmin/libSMTH/libSMTH_0.2.3.a; sourceTree = "<group>"; };
 		319D3E7518A0C0BD00A6FAB9 /* email_inbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email_inbox.png; sourceTree = "<group>"; };
 		319D3E7618A0C0BD00A6FAB9 /* guess_match.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guess_match.png; sourceTree = "<group>"; };
 		319D3E7718A0C0BD00A6FAB9 /* refer_article.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refer_article.png; sourceTree = "<group>"; };
@@ -336,7 +335,6 @@
 		31E6DB1E18D4311800C91597 /* icon_contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_contact.png; sourceTree = "<group>"; };
 		31E6DB2018D43CDC00C91597 /* icon_search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_search.png; sourceTree = "<group>"; };
 		31E6DB2218D46D7100C91597 /* icon_search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_search@2x.png"; sourceTree = "<group>"; };
-		31E6DB2418D46E1200C91597 /* libSMTH_0.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSMTH_0.1.0.a; path = BBSAdmin/libSMTH/libSMTH_0.1.0.a; sourceTree = "<group>"; };
 		31E6DB2618D46F5E00C91597 /* icon_timeline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_timeline.png; sourceTree = "<group>"; };
 		31E6DB2818D46FC400C91597 /* icon_member.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_member.png; sourceTree = "<group>"; };
 		31E6DB2A18D4803200C91597 /* icon_back1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_back1.png; sourceTree = "<group>"; };
@@ -455,7 +453,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31185DAC18E14B0000365A2F /* libSMTH_0.2.0.a in Frameworks */,
+				319C53B418F58F16004E4AD4 /* libSMTH_0.2.3.a in Frameworks */,
 				31E6DB8418D6EBD000C91597 /* CoreText.framework in Frameworks */,
 				31E6DB5418D48C1F00C91597 /* QuartzCore.framework in Frameworks */,
 				63909607187E45F500A57645 /* SystemConfiguration.framework in Frameworks */,
@@ -799,7 +797,7 @@
 		63EF251D1876B139009589B5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				31185DAB18E14B0000365A2F /* libSMTH_0.2.0.a */,
+				319C53B318F58F16004E4AD4 /* libSMTH_0.2.3.a */,
 				31E6DB8318D6EBD000C91597 /* CoreText.framework */,
 				31E6DB5318D48C1F00C91597 /* QuartzCore.framework */,
 				63909606187E45F500A57645 /* SystemConfiguration.framework */,
@@ -1051,7 +1049,6 @@
 				310EEDC9189213B000ACF30B /* BoardDirCell_iPad.xib in Resources */,
 				6318CE05187FEA9400292EB1 /* head02.png in Resources */,
 				31E970D41882DD1700EE6B4F /* iphonelaunch.png in Resources */,
-				31A1E36518D4241200A1DF54 /* bar_bg.png in Resources */,
 				310EEDE71893EDC200ACF30B /* ipadlaunch_76.png in Resources */,
 				31BCAABE18A790F600F643F2 /* guess_mymoney.png in Resources */,
 				31E970D61882DD2000EE6B4F /* iphonelaunch_retina.png in Resources */,
@@ -1226,8 +1223,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: YANG LUO (954FM3L4WH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YANG LUO (954FM3L4WH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BBSAdmin/BBSAdmin-Prefix.pch";
 				INFOPLIST_FILE = "BBSAdmin/BBSAdmin-Info.plist";
@@ -1237,7 +1234,7 @@
 					"$(PROJECT_DIR)/BBSAdmin/libSMTH",
 				);
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "A15DF09E-2C32-42D0-A605-F28185E72F76";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release_adhoc;
@@ -1306,8 +1303,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: YANG LUO (ACTXBFQ4GD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: YANG LUO (ACTXBFQ4GD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BBSAdmin/BBSAdmin-Prefix.pch";
 				INFOPLIST_FILE = "BBSAdmin/BBSAdmin-Info.plist";
@@ -1317,7 +1314,7 @@
 					"$(PROJECT_DIR)/BBSAdmin/libSMTH",
 				);
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "6ADA4DE7-4E66-4CEA-AC01-98D14F3428DB";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1326,8 +1323,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: YANG LUO (954FM3L4WH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: YANG LUO (954FM3L4WH)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BBSAdmin/BBSAdmin-Prefix.pch";
 				INFOPLIST_FILE = "BBSAdmin/BBSAdmin-Info.plist";
@@ -1337,7 +1334,7 @@
 					"$(PROJECT_DIR)/BBSAdmin/libSMTH",
 				);
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "D9E92F63-8B03-478A-A097-57C02858A0EC";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

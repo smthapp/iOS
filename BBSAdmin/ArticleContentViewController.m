@@ -12,6 +12,7 @@
 #import "ArticleForwardViewController.h"
 #import "UIViewController+AppGet.h"
 #import "ArticleListViewController.h"
+#import "MBSelectViewController.h"
 
 #define THREAD_PAGE_SIZE 10
 
@@ -29,12 +30,28 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     m_mtarrayInfo = [NSMutableArray arrayWithCapacity:10];
+    waiting_for_cross = false;
     
     if(mode != ArticleContentViewModeNormal || m_lBoardId == nil || (m_lBoardName != nil && ![m_lBoardName isEqualToString:@""])){
         navi.rightBarButtonItem = nil;
     }
     
     [self initContent];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if(waiting_for_cross){
+        cross_target = apiGetMBSelect();
+        
+        if(cross_target != nil){
+            [self loadContent];
+        }else{
+            waiting_for_cross = false;
+        }
+    }
 }
 
 - (void)initContent
@@ -159,11 +176,19 @@
 
 -(void)parseContent
 {
+    if(waiting_for_cross) {
+        waiting_for_cross = false;
+        
+        [net_smth net_CrossArticle:m_lBoardId :[[reply_dict objectForKey:@"id"] intValue] :cross_target];
+        return;
+    }
+
     if(mode == ArticleContentViewModeNormal){
         NSArray * arrayInfo = [net_smth net_GetThread:m_lBoardId :article_id :size :THREAD_PAGE_SIZE :appSetting->article_sort];
         if (net_smth->net_error == 0)
         {
             m_bLoadRes = 1;
+            article_cnt = [net_smth net_GetLastThreadCnt];
             //add single article
             //[m_mtarrayInfo addObject:arrayInfo];
             [self add_articles_with_att:arrayInfo];
@@ -348,6 +373,7 @@
         as_action[0] = 1;
         as_action[1] = 3;
         as_action[2] = 0;
+        as_action[3] = 0;
     }else if(mode == ArticleContentViewModeMailSent){
         //发件箱不支持任何功能
         return;
@@ -358,15 +384,17 @@
 #ifdef DEBUG
             NSLog(@"readonly article");
 #endif
-            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"私信回复", @"转寄", nil];
+            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"私信回复", @"转寄", @"转发到版面", nil];
             as_action[0] = 2;
             as_action[1] = 3;
-            as_action[2] = 0;
+            as_action[2] = 4;
+            as_action[3] = 0;
         }else{
-            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"回复", @"私信回复", @"转寄", nil];
+            as = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"回复", @"私信回复", @"转寄", @"转发到版面", nil];
             as_action[0] = 1;
             as_action[1] = 2;
             as_action[2] = 3;
+            as_action[3] = 4;
         }
     }
     
@@ -387,7 +415,7 @@
         as_indexpath = nil;
     }
     
-    if(buttonIndex >= 3){
+    if(buttonIndex >= 4){
         return;
     }
     
@@ -400,6 +428,9 @@
             break;
         case 3:
             [self as_forward];
+            break;
+        case 4:
+            [self as_cross];
             break;
         default:
             break;
@@ -446,6 +477,21 @@
         [artFwdController setContentInfo:true :m_lBoardId :m_lBoardName :reply_dict];
     }
     [self presentViewController:artFwdController animated:YES completion:nil];
+}
+
+- (void)as_cross
+{
+    if(mode == ArticleContentViewModeMail){
+        return;
+    }else if(mode == ArticleContentViewModeMailSent){
+        return;
+    }else{
+        waiting_for_cross = true;
+        
+        MBSelectViewController *artcontEditController = [UIViewController appGetView:@"MBSelectViewController"];
+        
+        [self presentViewController:artcontEditController animated:YES completion:nil];
+    }
 }
 
 - (void)updateContent

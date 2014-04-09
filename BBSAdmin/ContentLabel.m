@@ -75,7 +75,7 @@
     CGFloat total_height = 0;
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CGRect drawingRect = CGRectMake(0, 0, self.frame.size.width, 1000);  //这里的高要设置足够大
+    CGRect drawingRect = CGRectMake(0, 0, self.frame.size.width, 50000);  //这里的高要设置足够大
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, drawingRect);
     CTFrameRef textFrame = CTFramesetterCreateFrame(framesetter,CFRangeMake(0,0), path, NULL);
@@ -99,7 +99,7 @@
     CTLineRef line = (__bridge CTLineRef) [linesArray objectAtIndex:[linesArray count]-1];
     CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
     
-    total_height = 1000 - line_y + descent +1;    //+1为了纠正descent转换成int小数点后舍去的值
+    total_height = 50000 - line_y + descent +1;    //+1为了纠正descent转换成int小数点后舍去的值
     
     CFRelease(textFrame);
     

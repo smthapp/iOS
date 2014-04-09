@@ -103,7 +103,7 @@
 
     m_progressBar = [[MBProgressHUD alloc] initWithView:self.view];
     m_progressBar.delegate = self;
-    m_progressBar.labelText = @"努力加载中(00%%)...";
+    m_progressBar.labelText = @"努力加载中(00%)...";
     
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(HudTapped)];
     tap.delegate = self;

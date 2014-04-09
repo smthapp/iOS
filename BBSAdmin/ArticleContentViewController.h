@@ -40,8 +40,10 @@ enum ArticleContentViewMode {
     
     //ActionSheet
     NSDictionary * reply_dict;
-    int as_action[3];
+    int as_action[4];
     NSIndexPath * as_indexpath;
+    bool waiting_for_cross;
+    NSString * cross_target;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView *m_tableView;

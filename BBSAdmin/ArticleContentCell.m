@@ -61,8 +61,14 @@
                 UIImage * img = imgview.image;
 
                 if(img && img.size.width){
+#ifdef DEBUG
+                    NSLog(@"imgheight:%f", img.size.height);
+#endif
                     height += m_txtViewArtContent.frame.size.width * img.size.height / img.size.width;
                 }else{
+#ifdef DEBUG
+                    NSLog(@"imgheight:ori");
+#endif
                     height += m_txtViewArtContent.frame.size.width / 8;
                 }
             }
@@ -70,7 +76,9 @@
         }
         height += 5;
     }
-
+#ifdef DEBUG
+    NSLog(@"height:%f", height);
+#endif
     return height;
 }
 

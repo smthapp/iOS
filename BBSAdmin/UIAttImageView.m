@@ -75,6 +75,9 @@
         //don't refresh image immediately.
         self.image = image;
         if(tv){
+#ifdef DEBUG
+            NSLog(@"reload row");
+#endif
             [tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:index_path] withRowAnimation:UITableViewRowAnimationNone];
         }
         if(click_en == 2){
