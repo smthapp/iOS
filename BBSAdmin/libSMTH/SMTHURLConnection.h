@@ -27,6 +27,8 @@
     NSMutableData *net_responseData;
     
     NSURLConnection * net_connection;
+    
+    long last_thread_cnt;
 }
 
 @property (weak) id<SMTHURLConnectionDelegate> delegate;
@@ -43,11 +45,13 @@
 -(NSArray *)net_LoadThreadList:(NSString *)board_id :(long)from :(long)size :(int)brcmode;
 -(NSArray *)net_SearchArticle:(NSString *)board_id :(NSString *)title :(NSString *)user :(long)from :(long)size;
 -(NSArray *)net_GetThread:(NSString *)board_id :(long)article_id :(long)from :(long)size :(int)sort;
+-(long)net_GetLastThreadCnt;
 -(long)net_GetArticleCnt:(NSString *)board_id;
 -(NSDictionary*)net_GetArticle:(NSString *)board_id :(long)article_id;
 -(long)net_PostArticle:(NSString *)board_id :(NSString *)title :(NSString *)content;
 -(long)net_ForwardArticle:(NSString *)board_id :(long)article_id :(NSString *)user;
 -(long)net_ReplyArticle:(NSString *)board_id :(long)reply_id :(NSString *)title :(NSString *)content;
+-(long)net_CrossArticle:(NSString *)board_id :(long)article_id :(NSString *)dest_board;
 //mail
 -(int)net_GetMailCountSent;
 -(NSDictionary *)net_GetMailCount;
